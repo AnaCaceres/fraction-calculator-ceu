@@ -171,7 +171,7 @@ void opcion10(int numeradores[], int denominadores[], int* nFracciones) {
 
 
 
-int calculadora() {
+void calculadora() {
     int numeradores[MAX_FRACCIONES];
     int denominadores[MAX_FRACCIONES];
     int nFracciones;

@@ -2,7 +2,7 @@
 #define INTERFAZ_H
 
 
-int calculadora();
+void calculadora();
 void opcion1(int numeradores[], int denominadores[], int* nFracciones);
 void opcion2(int numeradores[], int denominadores[], int* nFracciones);
 void opcion3(int numeradores[], int denominadores[], int nFracciones);
