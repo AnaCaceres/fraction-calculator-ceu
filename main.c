@@ -25,7 +25,7 @@ void opcion1(int numeradores[], int denominadores[], int* nFracciones) {
         introduceFraccion(numerador, denominador, numeradores, denominadores, nFracciones);
         muestraResultadoCorrecto();
     } else {
-        muestraResultadoCorrecto();
+        muestraResultadoIncorrecto();
     }
 }
 
@@ -191,7 +191,7 @@ int main() {
         } else if (opcion == 4) {
             opcion4(numeradores, denominadores, nFracciones);
         } else if (opcion == 5) {
-           opcion5(numeradores, denominadores, nFracciones);
+            opcion5(numeradores, denominadores, nFracciones);
         } else if (opcion == 6) {
             opcion6(numeradores, denominadores, &nFracciones);
         } else if (opcion == 7) {
