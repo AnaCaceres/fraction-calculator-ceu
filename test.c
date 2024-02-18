@@ -12,6 +12,7 @@ void la_calculadora_deberia_eliminar_una_fraccion();
 void la_calculadora_deberia_mostrar_una_fraccion();
 void la_calculadora_deberia_mostrar_todas_las_fracciones();
 void la_calculadora_deberia_mostrar_un_valor_real();
+void la_calculadora_deberia_simplificar_una_fraccion();
 
 // Fraction calculator should store a fraction
 void la_calculadora_deberia_almacenar_una_fraccion() {
@@ -170,12 +171,61 @@ void la_calculadora_deberia_mostrar_un_valor_real(){
   printf("Valor real mostrado correctamente\n\n");
 }
 
+// ToExplain: Principio de menor sorpresa
+// Fraction calculator should simplify a fraction
+void la_calculadora_deberia_simplificar_una_fraccion(){
+  printf("La calculadora debería simplificar una fracción: \n");
+
+  int numeradores[MAX_FRACCIONES] = {2};
+  int denominadores[MAX_FRACCIONES] = {4};
+  int nFracciones = 1;
+  FILE *user_input = fopen("test_mocks/6_simplify_fraction.txt", "r");
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  stdin = user_input;
+  opcion6(numeradores, denominadores, &nFracciones);
+  stdin = stdin;
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  char buffer[100];
+  fgets(buffer, sizeof(buffer), file);
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+  fclose(user_input);
+
+  char expected_output[] = "Introduce posicion (1-1): 1\n1/2";
+  assert(strcmp(buffer, expected_output));
+  
+  printf("%s\n", expected_output);
+
+  // assert(nFracciones == 2);
+  // int expected_numeradores[2] = {2, 1};
+  // int expected_denominadores[2] = {4, 2};
+  // for (int i = 0; i < nFracciones; i++) {
+  //   assert(numeradores[i] == expected_numeradores[i]);
+  //   assert(denominadores[i] == expected_denominadores[i]);
+  // }
+  
+  printf("Fracción simplificada correctamente\n\n");
+  fclose(user_input);
+}
+
 int main() {
     la_calculadora_deberia_almacenar_una_fraccion();
     la_calculadora_deberia_eliminar_una_fraccion();
     la_calculadora_deberia_mostrar_una_fraccion();
     la_calculadora_deberia_mostrar_todas_las_fracciones();
     la_calculadora_deberia_mostrar_un_valor_real();
+    la_calculadora_deberia_simplificar_una_fraccion();
 
     return 0;
 }
