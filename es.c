@@ -4,20 +4,26 @@
 
 int menu() {
     int opcion;
+    const char *opciones[] = {
+        "Introducir fraccion",
+        "Eliminar una fraccion",
+        "Mostrar una fraccion",
+        "Mostrar todas las fracciones almacenadas",
+        "Mostrar valor real",
+        "Simplificar fraccion",
+        "Sumar fracciones",
+        "Restar fracciones",
+        "Multiplicar dos fracciones",
+        "Dividir dos fracciones",
+        "Salir"
+    };
+    int cantidad_de_opciones = sizeof(opciones) / sizeof(opciones[0]);
 
     do {
         printf("\n");
-        printf("1. Introducir fraccion\n");
-        printf("2. Eliminar una fraccion\n");
-        printf("3. Mostrar una fraccion\n");
-        printf("4. Mostrar todas las fracciones almacenadas\n");
-        printf("5. Mostrar valor real\n");
-        printf("6. Simplificar fraccion\n");
-        printf("7. Sumar fracciones\n");
-        printf("8. Restar fracciones\n");
-        printf("9. Multiplicar dos fracciones\n");
-        printf("10. Dividir dos fracciones\n");
-        printf("11. Salir\n");
+        for (int i = 0; i < cantidad_de_opciones; i++) {
+            printf("%d. %s\n", i + 1, opciones[i]);
+        }
         printf("Introduzca una opcion: ");
         scanf("%d", &opcion);
 
