@@ -1,9 +1,10 @@
 #include "es.h"
 
 #include <stdio.h>
+#include <stdbool.h>
 
 int menu() {
-    int opcion;
+    int opcion = 0;
     const char *opciones[] = {
         "Introducir fraccion",
         "Eliminar una fraccion",
@@ -25,14 +26,14 @@ int menu() {
             printf("%d. %s\n", i + 1, opciones[i]);
         }
         printf("Introduzca una opcion: ");
-        scanf("%d", &opcion);
-
-        if (opcion < 1 || opcion > 11) {
+        
+        if (scanf("%d", &opcion) != 1 || opcion < 1 || opcion > 11) {
             printf("Opcion incorrecta\n");
+			// Limpia el búfer de entrada
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
         }
     } while (opcion < 1 || opcion > 11);
-
-    printf("\n");
 
     return opcion;
 }

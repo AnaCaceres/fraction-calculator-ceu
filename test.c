@@ -496,7 +496,7 @@ void la_calculadora_deberia_mostrar_menu(){
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
 
-  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: \n";
+  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\n";
   assert_string_equal(expected_output, contenido);
 }
 
@@ -531,7 +531,7 @@ void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_selecciona_una_op
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
 
-  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: Opcion incorrecta\n\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: \n";
+  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: Opcion incorrecta\n\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\n";
   assert_string_equal(expected_output, contenido);
 }
 
@@ -566,7 +566,7 @@ void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_la_opcion_inserta
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
 
-  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: Opcion incorrecta\n\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: \n";
+  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: Opcion incorrecta\n\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\n";
   assert_string_equal(expected_output, contenido);
 }
 
@@ -584,7 +584,7 @@ int main() {
     la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas();
     la_calculadora_deberia_mostrar_menu();
     la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_selecciona_una_opcion_invalida();
-    // la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_la_opcion_insertada_no_es_numerica();
+    la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_la_opcion_insertada_no_es_numerica();
 
     return 0;
 }

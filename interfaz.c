@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "es.h"
 #include "fracciones.h"
 
@@ -167,8 +169,6 @@ void opcion10(int numeradores[], int denominadores[], int* nFracciones) {
         muestraResultadoIncorrecto();
     }
 }
-
-
 
 
 void calculadora() {
