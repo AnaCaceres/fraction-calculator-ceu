@@ -4,15 +4,16 @@
 #include "interfaz.h"
 #include "fracciones.h"
 
-void test_opcion1();
+void la_calculadora_deberia_almacenar_una_fraccion();
 
-void test_opcion1() {
+// Fraction calculator should store a fraction
+void la_calculadora_deberia_almacenar_una_fraccion() {
     printf("Test 1: \n");
 
     int numeradores[MAX_FRACCIONES] = {3};
     int denominadores[MAX_FRACCIONES] = {4};
     int nFracciones = 1;
-    FILE *user_input = fopen("test_mocks/opcion_1_mock.txt", "r");
+    FILE *user_input = fopen("test_mocks/1_store_a_fraction.txt", "r");
 
     stdin = user_input;
     opcion1(numeradores, denominadores, &nFracciones);
@@ -31,7 +32,7 @@ void test_opcion1() {
 }
 
 int main() {
-    test_opcion1();
+    la_calculadora_deberia_almacenar_una_fraccion();
 
     return 0;
 }
