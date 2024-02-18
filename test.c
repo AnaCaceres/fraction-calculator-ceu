@@ -13,6 +13,7 @@ void la_calculadora_deberia_mostrar_una_fraccion();
 void la_calculadora_deberia_mostrar_todas_las_fracciones();
 void la_calculadora_deberia_mostrar_un_valor_real();
 void la_calculadora_deberia_simplificar_una_fraccion();
+void la_calculadora_deberia_sumar_dos_fracciones();
 
 // Fraction calculator should store a fraction
 void la_calculadora_deberia_almacenar_una_fraccion() {
@@ -219,6 +220,43 @@ void la_calculadora_deberia_simplificar_una_fraccion(){
   fclose(user_input);
 }
 
+// Fraction calculator should add two fractions
+void la_calculadora_deberia_sumar_dos_fracciones(){
+  printf("La calculadora debería sumar dos fracciones: \n");
+
+  int numeradores[MAX_FRACCIONES] = {3, 1, 5, 2};
+  int denominadores[MAX_FRACCIONES] = {4, 9, 7, 3};
+  int nFracciones = 4;
+  FILE *user_input = fopen("test_mocks/7_add_two_fractions.txt", "r");
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  stdin = user_input;
+  opcion7(numeradores, denominadores, &nFracciones);
+  stdin = stdin;
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  char buffer[100];
+  fgets(buffer, sizeof(buffer), file);
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+  fclose(user_input);
+
+  char expected_output[] = "Introduce posicion (1-4): 3\nIntroduce posicion (1-4): 4\n31/21";
+  assert(strcmp(buffer, expected_output));
+  
+  printf("%s\n", expected_output);
+  printf("Fracciones sumadas correctamente\n\n");
+}
+
 int main() {
     la_calculadora_deberia_almacenar_una_fraccion();
     la_calculadora_deberia_eliminar_una_fraccion();
@@ -226,6 +264,7 @@ int main() {
     la_calculadora_deberia_mostrar_todas_las_fracciones();
     la_calculadora_deberia_mostrar_un_valor_real();
     la_calculadora_deberia_simplificar_una_fraccion();
+    la_calculadora_deberia_sumar_dos_fracciones();
 
     return 0;
 }
