@@ -5,6 +5,7 @@
 
 #include "interfaz.h"
 #include "fracciones.h"
+#include "es.h"
 
 void assert_int_equal(int expected, int received);
 void assert_string_equal(const char *expected, const char *received);
@@ -19,6 +20,7 @@ void la_calculadora_deberia_restar_dos_fracciones();
 void la_calculadora_deberia_multiplicar_dos_fracciones();
 void la_calculadora_deberia_dividir_dos_fracciones();
 void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas();
+void la_calculadora_deberia_mostrar_menu();
 
 void assert_int_equal(int expected, int received) {
   if (expected != received) {
@@ -461,6 +463,40 @@ void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones
   assert_string_equal(expected_output, contenido);
 }
 
+// Fraction calculator should display menu
+void la_calculadora_deberia_mostrar_menu(){
+  printf("La calculadora debería mostrar el menú: \n");
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  stdin = fopen("test_user_input/11_show_menu.txt", "r");
+  menu();
+  stdin = stdin;
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+
+  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: \n";
+  assert_string_equal(expected_output, contenido);
+}
 
 int main() {
     la_calculadora_deberia_almacenar_una_fraccion();
@@ -474,6 +510,7 @@ int main() {
     la_calculadora_deberia_multiplicar_dos_fracciones();
     la_calculadora_deberia_dividir_dos_fracciones();
     la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas();
+    la_calculadora_deberia_mostrar_menu();
 
     return 0;
 }
