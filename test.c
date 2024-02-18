@@ -21,6 +21,8 @@ void la_calculadora_deberia_multiplicar_dos_fracciones();
 void la_calculadora_deberia_dividir_dos_fracciones();
 void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas();
 void la_calculadora_deberia_mostrar_menu();
+void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_selecciona_una_opcion_invalida();
+void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_la_opcion_insertada_no_es_numerica();
 
 void assert_int_equal(int expected, int received) {
   if (expected != received) {
@@ -498,6 +500,76 @@ void la_calculadora_deberia_mostrar_menu(){
   assert_string_equal(expected_output, contenido);
 }
 
+// Fraction calculator should show error message when an invalid option is selected
+void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_selecciona_una_opcion_invalida(){
+  printf("La calculadora debería mostrar un mensaje de error cuando selecciona una opción inválida: \n");
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  stdin = fopen("test_user_input/12_invalid_option.txt", "r");
+  menu();
+  stdin = stdin;
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+
+  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: Opcion incorrecta\n\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: \n";
+  assert_string_equal(expected_output, contenido);
+}
+
+// Fraction calculator should display an error message when option inserted is nor numerical
+void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_la_opcion_insertada_no_es_numerica(){
+  printf("La calculadora debería mostrar un mensaje de error cuando la opción insertada no es numérica: \n");
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  stdin = fopen("test_user_input/13_non_numerical_option.txt", "r");
+  menu();
+  stdin = stdin;
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+
+  char expected_output[] = "\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: Opcion incorrecta\n\n1. Introducir fraccion\n2. Eliminar una fraccion\n3. Mostrar una fraccion\n4. Mostrar todas las fracciones almacenadas\n5. Mostrar valor real\n6. Simplificar fraccion\n7. Sumar fracciones\n8. Restar fracciones\n9. Multiplicar dos fracciones\n10. Dividir dos fracciones\n11. Salir\nIntroduzca una opcion: \n";
+  assert_string_equal(expected_output, contenido);
+}
+
 int main() {
     la_calculadora_deberia_almacenar_una_fraccion();
     la_calculadora_deberia_eliminar_una_fraccion();
@@ -511,6 +583,8 @@ int main() {
     la_calculadora_deberia_dividir_dos_fracciones();
     la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas();
     la_calculadora_deberia_mostrar_menu();
+    la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_selecciona_una_opcion_invalida();
+    // la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_la_opcion_insertada_no_es_numerica();
 
     return 0;
 }
