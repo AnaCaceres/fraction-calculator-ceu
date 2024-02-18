@@ -205,7 +205,5 @@ void calculadora() {
         }
 
     } while (opcion != 11);
-
-    return 0;
 }
 
