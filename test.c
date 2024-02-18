@@ -17,6 +17,8 @@ void la_calculadora_deberia_simplificar_una_fraccion();
 void la_calculadora_deberia_sumar_dos_fracciones();
 void la_calculadora_deberia_restar_dos_fracciones();
 void la_calculadora_deberia_multiplicar_dos_fracciones();
+void la_calculadora_deberia_dividir_dos_fracciones();
+void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas();
 
 void assert_int_equal(int expected, int received) {
   if (expected != received) {
@@ -370,6 +372,96 @@ void la_calculadora_deberia_multiplicar_dos_fracciones(){
   assert_string_equal(expected_output, contenido);
 }
 
+// Fraction calculator should divide two fractions
+void la_calculadora_deberia_dividir_dos_fracciones(){
+  printf("La calculadora debería dividir dos fracciones: \n");
+
+  int numeradores[MAX_FRACCIONES] = {3, 1, 5, 2};
+  int denominadores[MAX_FRACCIONES] = {4, 9, 7, 3};
+  int nFracciones = 4;
+  FILE *user_input = fopen("test_user_input/10_divide_two_fractions.txt", "r");
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  stdin = user_input;
+  opcion10(numeradores, denominadores, &nFracciones);
+  stdin = stdin;
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+
+  char expected_output[] = "Introduce posicion (1-4): Introduce posicion (1-4): 27/4\n";
+  assert_string_equal(expected_output, contenido);
+}
+
+// Fraction calculator should display an error message when no fraction is stored
+void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas(){
+  printf("La calculadora debería mostrar un mensaje de error cuando no hay fracciones almacenadas: \n");
+
+  int numeradores[MAX_FRACCIONES] = {};
+  int denominadores[MAX_FRACCIONES] = {};
+  int nFracciones = 0;
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  opcion2(numeradores, denominadores, &nFracciones);
+  opcion3(numeradores, denominadores, nFracciones);
+  opcion4(numeradores, denominadores, nFracciones);
+  opcion5(numeradores, denominadores, nFracciones);
+  opcion6(numeradores, denominadores, &nFracciones);
+  opcion7(numeradores, denominadores, &nFracciones);
+  opcion8(numeradores, denominadores, &nFracciones);
+  opcion9(numeradores, denominadores, &nFracciones);
+  opcion10(numeradores, denominadores, &nFracciones);
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+
+  char expected_output[10000];
+  for (int i = 0; i < 9; i++) {
+    strcat(expected_output, "No se ha podido realizar la operacion\n");
+  }
+  
+  assert_string_equal(expected_output, contenido);
+}
+
+
 int main() {
     la_calculadora_deberia_almacenar_una_fraccion();
     la_calculadora_deberia_eliminar_una_fraccion();
@@ -380,6 +472,8 @@ int main() {
     la_calculadora_deberia_sumar_dos_fracciones();
     la_calculadora_deberia_restar_dos_fracciones();
     la_calculadora_deberia_multiplicar_dos_fracciones();
+    la_calculadora_deberia_dividir_dos_fracciones();
+    la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones_almacenadas();
 
     return 0;
 }
