@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <assert.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
@@ -7,6 +6,8 @@
 #include "interfaz.h"
 #include "fracciones.h"
 
+void assert_int_equal(int expected, int received);
+void assert_string_equal(const char *expected, const char *received);
 void la_calculadora_deberia_almacenar_una_fraccion();
 void la_calculadora_deberia_eliminar_una_fraccion();
 void la_calculadora_deberia_mostrar_una_fraccion();
@@ -15,6 +16,23 @@ void la_calculadora_deberia_mostrar_un_valor_real();
 void la_calculadora_deberia_simplificar_una_fraccion();
 void la_calculadora_deberia_sumar_dos_fracciones();
 void la_calculadora_deberia_restar_dos_fracciones();
+void la_calculadora_deberia_multiplicar_dos_fracciones();
+
+void assert_int_equal(int expected, int received) {
+  if (expected != received) {
+    fprintf(stderr, "FAILED\nSe esperaba: %d\nSe recibió: %d\n\n", expected, received);
+  } else {
+    printf("PASS\n\n");
+  }
+}
+
+void assert_string_equal(const char *expected, const char *received) {
+  if (strcmp(expected, received) != 0) {
+    fprintf(stderr, "FAILED\nSe esperaba: %s\nSe recibió: %s\n\n", expected, received);
+  } else {
+    printf("PASS\n\n");
+  }
+}
 
 // Fraction calculator should store a fraction
 void la_calculadora_deberia_almacenar_una_fraccion() {
@@ -29,15 +47,14 @@ void la_calculadora_deberia_almacenar_una_fraccion() {
     opcion1(numeradores, denominadores, &nFracciones);
     stdin = stdin;
 
-    assert(nFracciones == 2);
+    assert_int_equal(2, nFracciones);
     int expected_numeradores[2] = {3, 2};
     int expected_denominadores[2] = {4, 3};
     for (int i = 0; i < nFracciones; i++) {
-        assert(numeradores[i] == expected_numeradores[i]);
-        assert(denominadores[i] == expected_denominadores[i]);
+        assert_int_equal(expected_numeradores[i], numeradores[i]);
+        assert_int_equal(expected_denominadores[i], denominadores[i]);
     }
     
-    printf("Fracción almacenada correctamente\n\n");
     fclose(user_input);
 }
 
@@ -54,15 +71,14 @@ void la_calculadora_deberia_eliminar_una_fraccion(){
   opcion2(numeradores, denominadores, &nFracciones);
   stdin = stdin;
 
-  assert(nFracciones == 2);
+  assert_int_equal(2, nFracciones);
   int expected_numeradores[2] = {3, 5};
   int expected_denominadores[2] = {4, 7};
   for (int i = 0; i < nFracciones; i++) {
-      assert(numeradores[i] == expected_numeradores[i]);
-      assert(denominadores[i] == expected_denominadores[i]);
+      assert_int_equal(expected_numeradores[i], numeradores[i]);
+      assert_int_equal(expected_denominadores[i], denominadores[i]);
   }
   
-  printf("Fracción eliminada correctamente\n\n");
   fclose(user_input);
 }
 
@@ -87,20 +103,23 @@ void la_calculadora_deberia_mostrar_una_fraccion(){
   
   // Lee el contenido del archivo temporal
   file = fopen("output.txt", "r");
-  char buffer[100];
-  fgets(buffer, sizeof(buffer), file);
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
   fclose(file);
   // Restaura stdout
   remove("output.txt");
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
-  fclose(user_input);
 
-  char expected_output[] = "Introduce posicion (1-4): 3\n5/7";
-  assert(strcmp(buffer, expected_output));
-  
-  printf("%s\n", expected_output);
-  printf("Fracción mostrada correctamente\n\n");
+  char expected_output[] = "Introduce posicion (1-4): 5/7\n";
+  assert_string_equal(expected_output, contenido);
 }
 
 // Fraction calculator should show all fractions
@@ -121,19 +140,23 @@ void la_calculadora_deberia_mostrar_todas_las_fracciones(){
 
   // Lee el contenido del archivo temporal
   file = fopen("output.txt", "r");
-  char buffer[100];
-  fgets(buffer, sizeof(buffer), file);
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
   fclose(file);
   // Restaura stdout
   remove("output.txt");
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
 
-  char expected_output[] = "Posicion 1: 3/4\nPosicion 2: 1/9\nPosicion 3: 5/7\nPosicion 4: 2/3";
-  assert(strcmp(buffer, expected_output));
-  
-  printf("%s\n", expected_output);
-  printf("Fracciones mostradas correctamente\n\n");
+  char expected_output[] = "Posicion 1: 3/4\nPosicion 2: 1/9\nPosicion 3: 5/7\nPosicion 4: 2/3\n";
+  assert_string_equal(expected_output, contenido);
 }
 
 // Fraction calculator should show a real value
@@ -157,20 +180,23 @@ void la_calculadora_deberia_mostrar_un_valor_real(){
   
   // Lee el contenido del archivo temporal
   file = fopen("output.txt", "r");
-  char buffer[100];
-  fgets(buffer, sizeof(buffer), file);
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
   fclose(file);
   // Restaura stdout
   remove("output.txt");
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
-  fclose(user_input);
 
-  char expected_output[] = "Introduce posicion (1-4): 3\n0.714286";
-  assert(strcmp(buffer, expected_output));
-  
-  printf("%s\n", expected_output);
-  printf("Valor real mostrado correctamente\n\n");
+  char expected_output[] = "Introduce posicion (1-4): El valor real es 0.714286\n";
+  assert_string_equal(expected_output, contenido);
 }
 
 // ToExplain: Principio de menor sorpresa
@@ -195,29 +221,32 @@ void la_calculadora_deberia_simplificar_una_fraccion(){
 
   // Lee el contenido del archivo temporal
   file = fopen("output.txt", "r");
-  char buffer[100];
-  fgets(buffer, sizeof(buffer), file);
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
   fclose(file);
   // Restaura stdout
   remove("output.txt");
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
-  fclose(user_input);
 
-  char expected_output[] = "Introduce posicion (1-1): 1\n1/2";
-  assert(strcmp(buffer, expected_output));
+  char expected_output[] = "Introduce posicion (1-1): 1/2\n";
+  assert_string_equal(expected_output, contenido);
   
-  printf("%s\n", expected_output);
-
-  // assert(nFracciones == 2);
+  // assert(2, nFracciones);
   // int expected_numeradores[2] = {2, 1};
   // int expected_denominadores[2] = {4, 2};
   // for (int i = 0; i < nFracciones; i++) {
-  //   assert(numeradores[i] == expected_numeradores[i]);
-  //   assert(denominadores[i] == expected_denominadores[i]);
+  //   assert(expected_numeradores[i], numeradores[i]);
+  //   assert(expected_denominadores[i], denominadores[i]);
   // }
   
-  printf("Fracción simplificada correctamente\n\n");
   fclose(user_input);
 }
 
@@ -242,20 +271,23 @@ void la_calculadora_deberia_sumar_dos_fracciones(){
 
   // Lee el contenido del archivo temporal
   file = fopen("output.txt", "r");
-  char buffer[100];
-  fgets(buffer, sizeof(buffer), file);
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
   fclose(file);
   // Restaura stdout
   remove("output.txt");
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
-  fclose(user_input);
 
-  char expected_output[] = "Introduce posicion (1-4): 3\nIntroduce posicion (1-4): 4\n31/21";
-  assert(strcmp(buffer, expected_output));
-  
-  printf("%s\n", expected_output);
-  printf("Fracciones sumadas correctamente\n\n");
+  char expected_output[] = "Introduce posicion (1-4): Introduce posicion (1-4): 52/63\n";
+  assert_string_equal(expected_output, contenido);
 }
 
 // Fraction calculator should subtract two fractions
@@ -279,20 +311,63 @@ void la_calculadora_deberia_restar_dos_fracciones(){
 
   // Lee el contenido del archivo temporal
   file = fopen("output.txt", "r");
-  char buffer[100];
-  fgets(buffer, sizeof(buffer), file);
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
   fclose(file);
   // Restaura stdout
   remove("output.txt");
   dup2(stdout_original, STDOUT_FILENO);
   close(stdout_original);
-  fclose(user_input);
 
-  char expected_output[] = "Introduce posicion (1-4): 3\nIntroduce posicion (1-4): 4\n11/21";
-  assert(strcmp(buffer, expected_output));
-  
-  printf("%s\n", expected_output);
-  printf("Fracciones restadas correctamente\n\n");
+  char expected_output[] = "Introduce posicion (1-4): Introduce posicion (1-4): 1/21\n";
+  assert_string_equal(expected_output, contenido);
+}
+
+// Fraction calculator should multiply two fractions
+void la_calculadora_deberia_multiplicar_dos_fracciones(){
+  printf("La calculadora debería multiplicar dos fracciones: \n");
+
+  int numeradores[MAX_FRACCIONES] = {3, 1, 5, 2};
+  int denominadores[MAX_FRACCIONES] = {4, 9, 7, 3};
+  int nFracciones = 4;
+  FILE *user_input = fopen("test_user_input/9_multiply_two_fractions.txt", "r");
+
+  int stdout_original = dup(STDOUT_FILENO);
+  FILE *file = fopen("output.txt", "w");
+  // Redirige stdout al archivo temporal
+  dup2(fileno(file), fileno(stdout));
+  fclose(file);
+
+  stdin = user_input;
+  opcion9(numeradores, denominadores, &nFracciones);
+  stdin = stdin;
+
+  // Lee el contenido del archivo temporal
+  file = fopen("output.txt", "r");
+  // Obtener el tamaño del archivo
+  fseek(file, 0, SEEK_END);
+  long tamaño = ftell(file);
+  fseek(file, 0, SEEK_SET);
+  // Asignar memoria para almacenar el contenido del archivo
+  char *contenido = (char *)malloc(tamaño + 1);
+  // Leer el archivo completo
+  fread(contenido, 1, tamaño, file);
+  // Cerrar el archivo
+  fclose(file);
+  // Restaura stdout
+  remove("output.txt");
+  dup2(stdout_original, STDOUT_FILENO);
+  close(stdout_original);
+
+  char expected_output[] = "Introduce posicion (1-4): Introduce posicion (1-4): 15/28\n";
+  assert_string_equal(expected_output, contenido);
 }
 
 int main() {
@@ -304,6 +379,7 @@ int main() {
     la_calculadora_deberia_simplificar_una_fraccion();
     la_calculadora_deberia_sumar_dos_fracciones();
     la_calculadora_deberia_restar_dos_fracciones();
+    la_calculadora_deberia_multiplicar_dos_fracciones();
 
     return 0;
 }
