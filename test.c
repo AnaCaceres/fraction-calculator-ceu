@@ -461,7 +461,6 @@ void la_calculadora_deberia_mostrar_un_mensaje_de_error_cuando_no_hay_fracciones
   assert_string_equal(expected_output, contenido);
 }
 
-
 int main() {
     la_calculadora_deberia_almacenar_una_fraccion();
     la_calculadora_deberia_eliminar_una_fraccion();
